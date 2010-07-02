@@ -49,3 +49,24 @@ describe "Multiple nested params" do
     click_button
   end
 end
+
+describe "Empty fields in form should be submitted as empty" do
+  it "should post empty fields" do
+    Webrat.configuration.mode = :mechanize
+
+    with_html <<-HTML
+    <html>
+    <form method="post" action="/fields">
+      <input type="text" value="" name="user" />
+      <input type="submit" />
+    </form>
+    </html>
+    HTML
+
+    params = [{"user"=>""}]
+
+    webrat_session.should_receive(:post).with("/fields", params)
+    click_button
+  end
+  
+end
